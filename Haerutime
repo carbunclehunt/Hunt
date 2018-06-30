@@ -1,0 +1,96 @@
+
+<html>
+<title>해루시계 (크기조절:더블클릭/기준:PC시간)</title>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <style>
+        @font-face {
+            font-family: 'DS-Digital';
+            src: url(font/DS-DIGIB.woff) format("woff"),
+                 url(font/DS-DIGIB.ttf) format("ttf")
+        }
+
+        html {
+            font-size: 62.5%;
+            -ms-transition: .15s;
+            -moz-transition: .15s;
+            -khtml-transition: .15s;
+            -webkit-transition: .15s;
+            transition: .15s;
+        }
+        div {
+            -ms-user-select: none;
+            -moz-user-select: -moz-none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            user-select: none
+        }
+
+        #clock {
+            width: 100%;
+            background: rgba(0, 0, 0, 0);
+            color: #fff;
+            font-family: 'DS-Digital';
+            font-size: 2.4rem;
+            text-align:left;
+            vertical-align: middle;
+            text-shadow: 0 0 .3rem #000;
+            cursor: move
+        }
+    </style>
+    <script>       
+        function printClock() {
+            $('body').css('background', 'transparent')
+            var clock = document.getElementById("clock");
+            var currentDate = new Date();
+            var currentHours = addZeros(currentDate.getHours(), 2);
+            var currentMinute = addZeros(currentDate.getMinutes(), 2);
+            var currentSeconds = addZeros(currentDate.getSeconds(), 2);
+            clock.innerHTML = currentHours + ":" + currentMinute + ":" + currentSeconds;
+            setTimeout("printClock()", 1000);
+        }
+        function addZeros(num, digit) {
+            var zero = '';
+            num = num.toString();
+            if (num.length < digit) {
+                for (i = 0; i < digit - num.length; i++) {
+                    zero += '0';
+                }
+            }
+            return zero + num;
+        }
+        window.onload = function () {
+            printClock();
+        }
+        function sizeClock(flag) {
+            var size = {
+                1: 62.5,
+                2: 75,
+                3: 100,
+                4: 125,
+                5: 150,
+                6: 175,
+                7: 200,
+                8: 225,
+                9: 250,
+                10: 300
+            }
+            if (!localStorage.getItem('size'))
+                localStorage.setItem('size', 1);
+            if (flag == 1) {
+                if (localStorage.getItem('size') == 10)
+                    localStorage.setItem('size', 1);
+                else
+                    localStorage.setItem('size', parseInt(localStorage.getItem('size')) + 1);
+            }
+            $('html').css('font-size', size[localStorage.getItem('size')] + '%');
+            
+        }
+    </script>
+</head>
+
+<body onload="printClock(); sizeClock(0)">
+    <div id="clock" ondblclick="sizeClock(1)"></div>
+</body>
+</html>
