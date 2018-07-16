@@ -1,1 +1,1 @@
-# Hunt
+# Carbuncle Hunt
