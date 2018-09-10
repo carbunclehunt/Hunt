@@ -19,15 +19,14 @@
 
 </iframe>
 
-<script language="javascript"> 
-<!-- 
-function doRefresh() { 
-parent.hunt.location.href='https://docs.google.com/spreadsheets/d/14b1nTYOjvuzL0-p7pKU8X_25ZxwnmFVDf8jIZM6iMpw/htmlembed/sheet?gid=448199523&range=A1:J52'; 
-setTimeout("doRefresh()",5000); //5초 
-} 
-doRefresh(); 
-//--> 
-</script> 
+<script language="javascript">
+   function iRefresh(){     
+   hunt.location.href="https://docs.google.com/spreadsheets/d/14b1nTYOjvuzL0-p7pKU8X_25ZxwnmFVDf8jIZM6iMpw/htmlembed/sheet?gid=448199523&range=A1:J52";  //iframe의 경로를 입력해 준다.
+   setTimeout("iRefresh()",3000);   //5분 간격으로 수정해 주기.
+   }
+   iRefresh();
+
+</script>
   
 </div>
 
