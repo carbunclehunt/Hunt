@@ -1,0 +1,370 @@
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html" charset="utf-8">
+        <title>[FFXIV] HunterRecon</title>
+        <meta name="description" content="HTML Overlay for FFXIV hunt information">
+        <script src="https://apis.google.com/js/api.js"></script>
+        <link rel="author" href="https://github.com/sappho192/HunterRecon">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-nanum-barun-gothic@1.0.0/nanumbarungothic.min.css">
+    </head>
+    <body>
+<!--    <div><input type="button" onclick="initClient();" value="수동갱신" /></div>-->
+        <div id="mdOption" class="modal">
+            <div class="mdOptionContent"><span style="font-size: 1.4em">서버:</span>
+                <i class="fa fa-toggle-left fa-2x" onclick="prevServer()"></i><select id="slServer" onchange="selectServerChanged()" disabled>
+                    <option value="초코보">초코보</option>
+                    <option value="모그리">모그리</option>
+                    <option value="카벙클">카벙클</option>
+                    <option value="톤베리">톤베리</option>
+                </select><i class="fa fa-toggle-right fa-2x" onclick="nextServer()"></i><br/>
+                <label class="container">
+                    <input type="checkbox" id="cbShowSInfo" checked="checked" onchange="optionSChanged(this)">
+                    <span class="checkmark"></span>S마물 표시</label><br/>
+                <label class="container">
+                    <input type="checkbox" id="cbShowHardSInfo" checked="checked" onchange="optionHardSChanged(this)">
+                    <span class="checkmark"></span><span id="txtHardS">150%를 넘긴 S마물 표시</span></label><br/>
+                <br/><div align="center">sappho192@gmail.com</div>
+            </div>
+        </div>
+        <div id="huntDivA" style="width: 180px">
+            <table id="huntTableA">
+            <colgroup>
+            <col style="width: 30%;">
+            <col style="width: 65%;">
+            <col style="width: 5%;">
+            </colgroup>
+              <tr>
+                <th id="head" colspan="3"><span>마물 시간표</span><span id="spServerName"></span><span class="bt"><button class="btn" onclick="showOption()" id="btOption"><i class="fa fa-cog fa-2x white"></i></button></span></th>
+              </tr>
+              <tr>
+                <td id='A1'></td>
+                <td id='A2'></td>
+                <td id='A3'></td>
+              </tr>
+              <tr>
+                <td id='B1'></td>
+                <td id='B2'></td>
+                <td id='B3'></td>
+              </tr>
+              <tr>
+                <td id='C1'></td>
+                <td id='C2'></td>
+                <td id='C3'></td>
+              </tr>
+              <tr>
+                <td id='D1'></td>
+                <td id='D2'></td>
+                <td id='D3'></td>
+              </tr>
+              <tr>
+                <td id='E1'></td>
+                <td id='E2'></td>
+                <td id='E3'></td>
+              </tr>
+              <tr>
+                <td id='F1'></td>
+                <td id='F2'></td>
+                <td id='F3'></td>
+              </tr>
+              <tr>
+                <td id='G1'></td>
+                <td id='G2'></td>
+                <td id='G3'></td>
+              </tr>
+              <tr>
+                <td id='H1'></td>
+                <td id='H2'></td>
+                <td id='H3'></td>
+              </tr>
+              <tr>
+                <td id='I1'></td>
+                <td id='I2'></td>
+                <td id='I3'></td>
+              </tr>
+              <tr>
+                <td id='J1'></td>
+                <td id='J2'></td>
+                <td id='J3'></td>
+              </tr>
+              <tr>
+                <td id='K1'></td>
+                <td id='K2'></td>
+                <td id='K3'></td>
+              </tr>
+              <tr>
+                <td id='L1'></td>
+                <td id='L2'></td>
+                <td id='L3'></td>
+              </tr>
+              <tr>
+                <td id='M1'></td>
+                <td id='M2'></td>
+                <td id='M3'></td>
+              </tr>
+              <tr>
+                <td id='N1'></td>
+                <td id='N2'></td>
+                <td id='N3'></td>
+              </tr>
+            </table>
+        </div>
+        <script>
+            gapi.load('client', initClient);
+            var alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N"];
+            var SERVER = {
+                "CAR" : "카벙클",
+                "CHO" : "초코보",
+                "TON" : "톤베리",
+                "MOG" : "모그리"
+            };
+//            localStorage.clear(); // option test
+            var server = SERVER.TON;
+            var showSInfo = true;
+            var showHardSInfo = true;
+            if (storageAvailable('localStorage')) {
+                if(!localStorage.getItem('showsinfo')) {
+                    localStorage.setItem('showsinfo', showSInfo);
+                }
+                if(!localStorage.getItem('showhardsinfo')) {
+                    localStorage.setItem('showhardsinfo', showSInfo);
+                }
+                if(!localStorage.getItem('server')) {
+                    localStorage.setItem('server', server);
+                }
+                
+                showSInfo = JSON.parse(localStorage.getItem('showsinfo'));
+                showHardSInfo = JSON.parse(localStorage.getItem('showhardsinfo'));
+                server = localStorage.getItem('server');
+                
+                document.getElementById("cbShowSInfo").checked = JSON.parse(showSInfo);
+                document.getElementById("cbShowHardSInfo").checked = JSON.parse(showHardSInfo);
+                document.getElementById("spServerName").innerHTML = "(" + server + ")";
+                var selServer = document.getElementById("slServer");
+                for(var i, j = 0; i = selServer.options[j]; j++) {
+                    if(i.value == server) {
+                        selServer.selectedIndex = j;
+                        break;
+                    }
+                }
+            } else {
+                console.error("Couldn't load localStorage");
+            }
+            
+            // Options Modal related functions
+            function storageAvailable(type) {
+                try {
+                    var storage = window[type],
+                        x = '__storage_test__';
+                    storage.setItem(x, x);
+                    storage.removeItem(x);
+                    return true;
+                }
+                catch(e) {
+                    return e instanceof DOMException && (
+                        // Firefox를 제외한 모든 브라우저
+                        e.code === 22 ||
+                        // Firefox
+                        e.code === 1014 ||
+                        // 코드가 존재하지 않을 수도 있기 때문에 테스트 이름 필드도 있습니다.
+                        // Firefox를 제외한 모든 브라우저
+                        e.name === 'QuotaExceededError' ||
+                        // Firefox
+                        e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+                        // 이미 저장된 것이있는 경우에만 QuotaExceededError를 확인하십시오.
+                        storage.length !== 0;
+                }
+            }
+            window.onclick = function(event) {
+                var mdOpt = document.getElementById("mdOption");
+                if(event.target == mdOpt) {
+                    mdOpt.style.display = "none";
+                }
+            }
+            function showOption() {
+                var mdOpt = document.getElementById("mdOption");
+                mdOpt.style.display = "block";
+            }
+            function optionSChanged(element) {
+                if(!element.checked) {
+                    document.getElementById("cbShowHardSInfo").setAttribute("disabled","");
+                    document.getElementById("txtHardS").setAttribute("gray","");
+                } else {
+                    document.getElementById("cbShowHardSInfo").removeAttribute("disabled");
+                    document.getElementById("txtHardS").removeAttribute("gray");
+                }
+                
+                showSInfo = element.checked;
+                localStorage.setItem('showsinfo', showSInfo);
+                initClient();
+            }
+            function optionHardSChanged(element) {
+                showHardSInfo = element.checked;
+                localStorage.setItem('showhardsinfo', showHardSInfo);
+                initClient();
+            }
+            function selectServerChanged() {
+                var selServer = document.getElementById("slServer");
+                server = selServer.options[selServer.selectedIndex].value;
+                localStorage.setItem('server', server);
+                document.getElementById("spServerName").innerHTML = "(" + server + ")";
+                initClient();
+            }
+            function prevServer() {
+                var selServer = document.getElementById("slServer");
+                if(selServer.selectedIndex > 0) {
+                    selServer.selectedIndex = selServer.selectedIndex - 1;
+                }
+                selectServerChanged();
+            }
+            function nextServer() {
+                var selServer = document.getElementById("slServer");
+                if(selServer.selectedIndex < 3) {
+                    selServer.selectedIndex = selServer.selectedIndex + 1;
+                }
+                selectServerChanged();
+            }
+            
+            function initClient() {
+                var API_KEY = 'AIzaSyAxFo4vumR9TLX-0-5zUaUbzXdY7mzDhOk';
+                var CLIENT_ID = '17741540562-l3u3pptf45khhkpv103e7737imama9b1.apps.googleusercontent.com';
+                var SCOPE = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+                gapi.client.init({
+                    'apiKey': API_KEY,
+                    'discoveryDocs': ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+                    }).then(function() {
+                    makeApiCall();
+                });
+            }
+            function makeApiCall() {
+                var params;
+                
+                if(server == SERVER.CAR) {
+                    params = {
+                        spreadsheetId: '1JsIR4Lms7FvJtfvWV0BU35n1rwmUS-F_eIRfiBdceTc',
+                        ranges: showSInfo ? ["Timer!B13:H53", "Timer!J13:R25"] : ["Timer!B13:H53"], // 순서대로 A+S마물, A마물 정보
+                        majorDimension: 'ROWS',
+                    };
+                } else if(server == SERVER.CHO) {
+                    params = {
+                        spreadsheetId: '1JsIR4Lms7FvJtfvWV0BU35n1rwmUS-F_eIRfiBdceTc',
+                        ranges: showSInfo ? ["Timer!T13:Z53", "Timer!AB13:AJ25"] : ["Timer!T13:Z53"],
+                        majorDimension: 'ROWS',
+                    };                    
+                } else if(server == SERVER.MOG) {
+                    params = {
+                        spreadsheetId: '1JsIR4Lms7FvJtfvWV0BU35n1rwmUS-F_eIRfiBdceTc',
+                        ranges: showSInfo ? ["Timer!AL13:AR53", "Timer!AT13:BB25"] : ["Timer!AL13:AR53"],
+                        majorDimension: 'ROWS',
+                    };     
+                } else if(server == SERVER.TON) {
+                    params = {
+                        spreadsheetId: '1JsIR4Lms7FvJtfvWV0BU35n1rwmUS-F_eIRfiBdceTc',
+                        ranges: showSInfo ? ["Timer!BD13:BJ53", "Timer!BL13:BT25"] : ["Timer!BD13:BJ53"],
+                        majorDimension: 'ROWS',
+                    };
+                }
+                var request = gapi.client.sheets.spreadsheets.values.batchGet(params);
+                request.then(function(response) {
+                    updateTable(response.result);
+                }, function(reason) {
+                        console.error('error: ' + reason.result.error.message);
+                });
+            }
+            function compareHunt(a, b) {
+                var x = a[2] == "실종" ? 0 : a[2];
+                var y = b[2] == "실종" ? 0 : b[2];
+                if(parseFloat(x) < parseFloat(y)) {
+                    return 1;
+                } if (parseFloat(x) > parseFloat(y)) {
+                    return -1;
+                }
+                return 0;
+            }
+            function updateTable(data) {
+//                console.log(data);
+                var tableArr = [];
+                
+                // A마물의 정보 수집
+                var dataA = data.valueRanges["0"].values;
+                var i;
+                for(i = 0; i < dataA.length; i++)
+                {
+                    if(dataA[i].length == 7)
+                    {// ["저지드라", "기계병정 슬립킨크스", "", " 07일 14:04 ~ 07일 16:24", "", "", "66%"]
+                        var elem = new Array(3);
+                        elem[0] = dataA[i][0];
+                        elem[1] = dataA[i][1];
+                        elem[2] = dataA[i][6];
+                        tableArr.push(elem);
+                    }
+                    else if(dataA[i].length == 4)
+                    {// 실종 or 젠대기
+                        var elem = new Array(3);
+                        if(dataA[i][1].indexOf("실종") != -1) {
+                            elem[0] =dataA[i][0];
+                            elem[1] = dataA[i][1].replace(" ▶실종◀","");
+                            elem[2] = "실종";
+                            tableArr.push(elem);
+                        }
+                    }
+                }
+                
+                // S마물의 정보 수집
+                if(showSInfo == true) {
+                    updateSInfo(data.valueRanges["1"].values, tableArr);
+                }
+                
+                // 정렬
+                tableArr.sort(compareHunt);
+                
+                // 표에 기록
+                var bound = tableArr.length > 14 ? 14 : tableArr.length;
+                for(i = 0; i < 14; i++)
+                {
+                    if(i < bound) {
+                        document.getElementById(String(alphabet[i]+1)).innerHTML = tableArr[i][0];
+                        document.getElementById(String(alphabet[i]+2)).innerHTML = tableArr[i][1];
+                        var percentCell = document.getElementById(String(alphabet[i]+3));
+                        if(tableArr[i][2].length > 3) {
+                            percentCell.style.backgroundColor = "rgba(140,38,5,0.95)";
+                        } else {
+                            if(i % 2 == 1) { 
+                                percentCell.style.backgroundColor = "rgb(55,81,120)";
+                            } else {
+                                percentCell.style.backgroundColor = "rgb(5,38,87)";
+                            }
+                        }
+                        percentCell.innerHTML = tableArr[i][2];
+                    } else {
+                        document.getElementById(String(alphabet[i]+1)).innerHTML = "";
+                        document.getElementById(String(alphabet[i]+2)).innerHTML = "";
+                        document.getElementById(String(alphabet[i]+3)).innerHTML = "";
+                    }
+                }
+            }
+            function updateSInfo(dataS, tableArr) {
+                for(i = 0; i < dataS.length; i++)
+                {
+                    if(dataS[i].length == 9) // 4==젠중
+                    {//["오키나", "", " 07일 03:11 ~ 09일 07:11", "", "", "", "", "99%"]
+                        if(parseFloat(dataS[i][8]) > 150 && !showHardSInfo) {
+                            // skip
+//                            console.log(dataS[i][0] + ":" + dataS[i][7]);
+                        } else {
+                            var elem = new Array(3);
+                            elem[0] = dataS[i][0];
+                            elem[1] = dataS[i][1] + "(S)";
+                            elem[2] = dataS[i][8];
+                            tableArr.push(elem);
+//                            console.log(elem);
+                        }
+                    }
+                }
+            }
+            
+            setInterval(initClient, 30000);
+        </script>
+    </body>
+</html>
