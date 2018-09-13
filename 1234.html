@@ -11,7 +11,7 @@
             <col style="width: 5%;">
             </colgroup>
               <tr>
-                <th id="head" colspan="3"><span>마물 시간표</span><span id="spServerName"></span><span class="bt"><button class="btn" onclick="showOption()" id="btOption"><i class="fa fa-cog fa-2x white"></i></button></span></th>
+                <th id="head" colspan="3"><span>마물 시간표</span><span id="spServerName"></th>
               </tr>
               <tr>
                 <td id='A1'></td>
@@ -93,7 +93,7 @@
         spreadsheetId: '1JsIR4Lms7FvJtfvWV0BU35n1rwmUS-F_eIRfiBdceTc',  // TODO: Update placeholder value.
 
         // The A1 notation of the values to retrieve.
-        range: showSInfo ? ["Timer!B13:H53", "Timer!J13:R25"] : ["Timer!B13:H53"],  // TODO: Update placeholder value.
+        range: ["Timer!B13:H53", "Timer!J13:R25"] : ["Timer!B13:H53"],  // TODO: Update placeholder value.
         majorDimension: 'ROWS',
         // How values should be represented in the output.
         // The default render option is ValueRenderOption.FORMATTED_VALUE.
