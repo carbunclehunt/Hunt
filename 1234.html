@@ -2,89 +2,6 @@
 <html>
   <head></head>
   <body>
-    <div id="huntDivA" style="width: 180px">
-      <table id="huntTableA">
-        <colgroup>
-          <col style="width: 30%;">
-          <col style="width: 65%;">
-          <col style="width: 5%;">
-            </colgroup>
-              <tr>
-                <th id="head" colspan="3"><span>마물 시간표</span></th>
-              </tr>
-              <tr>
-                <td id='A1'></td>
-                <td id='A2'></td>
-                <td id='A3'></td>
-              </tr>
-              <tr>
-                <td id='B1'></td>
-                <td id='B2'></td>
-                <td id='B3'></td>
-              </tr>
-              <tr>
-                <td id='C1'></td>
-                <td id='C2'></td>
-                <td id='C3'></td>
-              </tr>
-              <tr>
-                <td id='D1'></td>
-                <td id='D2'></td>
-                <td id='D3'></td>
-              </tr>
-              <tr>
-                <td id='E1'></td>
-                <td id='E2'></td>
-                <td id='E3'></td>
-              </tr>
-              <tr>
-                <td id='F1'></td>
-                <td id='F2'></td>
-                <td id='F3'></td>
-              </tr>
-              <tr>
-                <td id='G1'></td>
-                <td id='G2'></td>
-                <td id='G3'></td>
-              </tr>
-              <tr>
-                <td id='H1'></td>
-                <td id='H2'></td>
-                <td id='H3'></td>
-              </tr>
-              <tr>
-                <td id='I1'></td>
-                <td id='I2'></td>
-                <td id='I3'></td>
-              </tr>
-              <tr>
-                <td id='J1'></td>
-                <td id='J2'></td>
-                <td id='J3'></td>
-              </tr>
-              <tr>
-                <td id='K1'></td>
-                <td id='K2'></td>
-                <td id='K3'></td>
-              </tr>
-              <tr>
-                <td id='L1'></td>
-                <td id='L2'></td>
-                <td id='L3'></td>
-              </tr>
-              <tr>
-                <td id='M1'></td>
-                <td id='M2'></td>
-                <td id='M3'></td>
-              </tr>
-              <tr>
-                <td id='N1'></td>
-                <td id='N2'></td>
-                <td id='N3'></td>
-              </tr>
-            </table>
-        </div>
-
     <script>
     function makeApiCall() {
       var params = {
@@ -108,10 +25,20 @@
       request.then(function(response) {
         // TODO: Change code below to process the `response` object:
         console.log(response.result);
+    populateSheet(response.result);
       }, function(reason) {
         console.error('error: ' + reason.result.error.message);
       });
     }
+      
+  function populateSheet(result) {
+    for(var row=0; row<8; row++) {
+      for(var col=0; col<3; col++) {
+      document.getElementById(row+":"+col).value = result.values[row][col];
+      }
+
+    }
+  }
 
     function initClient() {
       var API_KEY = 'AIzaSyB4QdUwWEhynT_Npy4L7D9F1S8gkSXC32s';  // TODO: Update placeholder with desired API key.
@@ -162,6 +89,16 @@
     </script>
     <button id="signin-button" onclick="handleSignInClick()">Sign in</button>
     <button id="signout-button" onclick="handleSignOutClick()">Sign out</button>
-      
+    
+    <div style="margin-left:auto; margin-right:auto; width:960px;">
+    <?php
+    for($row = 0; $row < 8; $row++) {
+      echo "<div style='clear:both'>";
+      for($col = 0; $col < 3; $col++) {
+        echo "<input type='text' style='float:left;' name = '$row:$col' id='$row:$col'>";
+      }
+      echo "</div>";
+    }
+    ?>
   </body>
 </html>
