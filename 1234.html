@@ -2,16 +2,89 @@
 <html>
   <head></head>
   <body>
-    <!--
-    BEFORE RUNNING:
-    1. If not already done, enable the Google Sheets API
-       and check the quota for your project at
-       https://console.developers.google.com/apis/api/sheets
-    2. Get access keys for your application. See
-       https://developers.google.com/api-client-library/javascript/start/start-js#get-access-keys-for-your-application
-    3. For additional information on authentication, see
-       https://developers.google.com/sheets/api/quickstart/js#step_2_set_up_the_sample
-    -->
+            <div id="huntDivA" style="width: 180px">
+            <table id="huntTableA">
+            <colgroup>
+            <col style="width: 30%;">
+            <col style="width: 65%;">
+            <col style="width: 5%;">
+            </colgroup>
+              <tr>
+                <th id="head" colspan="3"><span>마물 시간표</span><span id="spServerName"></span><span class="bt"><button class="btn" onclick="showOption()" id="btOption"><i class="fa fa-cog fa-2x white"></i></button></span></th>
+              </tr>
+              <tr>
+                <td id='A1'></td>
+                <td id='A2'></td>
+                <td id='A3'></td>
+              </tr>
+              <tr>
+                <td id='B1'></td>
+                <td id='B2'></td>
+                <td id='B3'></td>
+              </tr>
+              <tr>
+                <td id='C1'></td>
+                <td id='C2'></td>
+                <td id='C3'></td>
+              </tr>
+              <tr>
+                <td id='D1'></td>
+                <td id='D2'></td>
+                <td id='D3'></td>
+              </tr>
+              <tr>
+                <td id='E1'></td>
+                <td id='E2'></td>
+                <td id='E3'></td>
+              </tr>
+              <tr>
+                <td id='F1'></td>
+                <td id='F2'></td>
+                <td id='F3'></td>
+              </tr>
+              <tr>
+                <td id='G1'></td>
+                <td id='G2'></td>
+                <td id='G3'></td>
+              </tr>
+              <tr>
+                <td id='H1'></td>
+                <td id='H2'></td>
+                <td id='H3'></td>
+              </tr>
+              <tr>
+                <td id='I1'></td>
+                <td id='I2'></td>
+                <td id='I3'></td>
+              </tr>
+              <tr>
+                <td id='J1'></td>
+                <td id='J2'></td>
+                <td id='J3'></td>
+              </tr>
+              <tr>
+                <td id='K1'></td>
+                <td id='K2'></td>
+                <td id='K3'></td>
+              </tr>
+              <tr>
+                <td id='L1'></td>
+                <td id='L2'></td>
+                <td id='L3'></td>
+              </tr>
+              <tr>
+                <td id='M1'></td>
+                <td id='M2'></td>
+                <td id='M3'></td>
+              </tr>
+              <tr>
+                <td id='N1'></td>
+                <td id='N2'></td>
+                <td id='N3'></td>
+              </tr>
+            </table>
+        </div>
+
     <script>
     function makeApiCall() {
       var params = {
@@ -36,7 +109,6 @@
       request.then(function(response) {
         // TODO: Change code below to process the `response` object:
         console.log(response.result);
-        populateSheet(response.result);
       }, function(reason) {
         console.error('error: ' + reason.result.error.message);
       });
@@ -61,8 +133,7 @@
         'scope': SCOPE,
         'discoveryDocs': ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
       }).then(function() {
-        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSignInStatus);
-        updateSignInStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+      makeApiCall();
       });
     }
 
@@ -83,43 +154,9 @@
     function handleSignOutClick(event) {
       gapi.auth2.getAuthInstance().signOut();
     }
-      
-    function populateSheet(result) {
-      for(var row=0; row<8; row++) {
-        for(var col=0; col<3; col++) {
-        document.getElemetById(row+":"+col).value = result.values[row][col];
-        }
-      }
-    }
-      
     </script>
     
-
-
-<p align = "center"><font size"20" color="blue">표!</p>
-
-</font>
-
-<table border="1" width="300" height="400" align="center">
-
-<font color="black">
-
-<tr align="center">
-
-<td>1행 1열</td>
-
-<td>1행 2열</td>
-
-</tr>
-
-<tr align="center">
-
-<td>2행 1열</td>
-
-<td>2행 2열</td>
-
-</tr>
-          
+    
     <script async defer src="https://apis.google.com/js/api.js"
       onload="this.onload=function(){};handleClientLoad()"
       onreadystatechange="if (this.readyState === 'complete') this.onload()">
