@@ -70,6 +70,91 @@
     function handleSignOutClick(event) {
       gapi.auth2.getAuthInstance().signOut();
     }
+      
+                  function updateTable(data) {
+//                console.log(data);
+                var tableArr = [];
+                
+                // A마물의 정보 수집
+                var dataA = data.valueRanges["0"].values;
+                var i;
+                for(i = 0; i < dataA.length; i++)
+                {
+                    if(dataA[i].length == 7)
+                    {// ["저지드라", "기계병정 슬립킨크스", "", " 07일 14:04 ~ 07일 16:24", "", "", "66%"]
+                        var elem = new Array(3);
+                        elem[0] = dataA[i][0];
+                        elem[1] = dataA[i][1];
+                        elem[2] = dataA[i][6];
+                        tableArr.push(elem);
+                    }
+                    else if(dataA[i].length == 4)
+                    {// 실종 or 젠대기
+                        var elem = new Array(3);
+                        if(dataA[i][1].indexOf("실종") != -1) {
+                            elem[0] =dataA[i][0];
+                            elem[1] = dataA[i][1].replace(" ▶실종◀","");
+                            elem[2] = "실종";
+                            tableArr.push(elem);
+                        }
+                    }
+                }
+                
+                // S마물의 정보 수집
+                if(showSInfo == true) {
+                    updateSInfo(data.valueRanges["1"].values, tableArr);
+                }
+                
+                // 정렬
+                tableArr.sort(compareHunt);
+                
+                // 표에 기록
+                var bound = tableArr.length > 14 ? 14 : tableArr.length;
+                for(i = 0; i < 14; i++)
+                {
+                    if(i < bound) {
+                        document.getElementById(String(alphabet[i]+1)).innerHTML = tableArr[i][0];
+                        document.getElementById(String(alphabet[i]+2)).innerHTML = tableArr[i][1];
+                        var percentCell = document.getElementById(String(alphabet[i]+3));
+                        if(tableArr[i][2].length > 3) {
+                            percentCell.style.backgroundColor = "rgba(140,38,5,0.95)";
+                        } else {
+                            if(i % 2 == 1) { 
+                                percentCell.style.backgroundColor = "rgb(55,81,120)";
+                            } else {
+                                percentCell.style.backgroundColor = "rgb(5,38,87)";
+                            }
+                        }
+                        percentCell.innerHTML = tableArr[i][2];
+                    } else {
+                        document.getElementById(String(alphabet[i]+1)).innerHTML = "";
+                        document.getElementById(String(alphabet[i]+2)).innerHTML = "";
+                        document.getElementById(String(alphabet[i]+3)).innerHTML = "";
+                    }
+                }
+            }
+            function updateSInfo(dataS, tableArr) {
+                for(i = 0; i < dataS.length; i++)
+                {
+                    if(dataS[i].length == 9) // 4==젠중
+                    {//["오키나", "", " 07일 03:11 ~ 09일 07:11", "", "", "", "", "99%"]
+                        if(parseFloat(dataS[i][8]) > 150 && !showHardSInfo) {
+                            // skip
+//                            console.log(dataS[i][0] + ":" + dataS[i][7]);
+                        } else {
+                            var elem = new Array(3);
+                            elem[0] = dataS[i][0];
+                            elem[1] = dataS[i][1] + "(S)";
+                            elem[2] = dataS[i][8];
+                            tableArr.push(elem);
+//                            console.log(elem);
+                        }
+                    }
+                }
+            }
+            
+            setInterval(initClient, 30000);
+      
     </script>
     
     
