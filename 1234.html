@@ -2,22 +2,6 @@
 <html>
   <head></head>
   <body>
-        <div id="mdOption" class="modal">
-            <div class="mdOptionContent"><span style="font-size: 1.4em">서버:</span>
-                <i class="fa fa-toggle-left fa-2x" onclick="prevServer()"></i><select id="slServer" onchange="selectServerChanged()" disabled>
-                    <option value="초코보">초코보</option>
-                    <option value="모그리">모그리</option>
-                    <option value="카벙클">카벙클</option>
-                    <option value="톤베리">톤베리</option>
-                </select><i class="fa fa-toggle-right fa-2x" onclick="nextServer()"></i><br/>
-                <label class="container">
-                    <input type="checkbox" id="cbShowSInfo" checked="checked" onchange="optionSChanged(this)">
-                    <span class="checkmark"></span>S마물 표시</label><br/>
-                <label class="container">
-                    <input type="checkbox" id="cbShowHardSInfo" checked="checked" onchange="optionHardSChanged(this)">
-                    <span class="checkmark"></span><span id="txtHardS">150%를 넘긴 S마물 표시</span></label><br/>
-                <br/><div align="center">sappho192@gmail.com</div>
-            </div>
         </div>
             <div id="huntDivA" style="width: 180px">
             <table id="huntTableA">
@@ -106,11 +90,11 @@
     function makeApiCall() {
       var params = {
         // The ID of the spreadsheet to retrieve data from.
-        spreadsheetId: '1Oxkmqux5GOzcxWEFA9USctUsdafAMOpa9-q7Eoiblx0',  // TODO: Update placeholder value.
+        spreadsheetId: '1JsIR4Lms7FvJtfvWV0BU35n1rwmUS-F_eIRfiBdceTc',  // TODO: Update placeholder value.
 
         // The A1 notation of the values to retrieve.
-        range: '4321',  // TODO: Update placeholder value.
-
+        range: showSInfo ? ["Timer!B13:H53", "Timer!J13:R25"] : ["Timer!B13:H53"],  // TODO: Update placeholder value.
+        majorDimension: 'ROWS',
         // How values should be represented in the output.
         // The default render option is ValueRenderOption.FORMATTED_VALUE.
         // valueRenderOption: '',  // TODO: Update placeholder value.
